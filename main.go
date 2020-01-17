@@ -11,19 +11,24 @@ import (
 func main() {
 	e := echo.New()
 
-	e.GET("/", func(c echo.Context) error{
-		return c.String(http.StatusOK, "Hello World")
-	})
+	e.Static("/", "public")
+	e.File("/", "public/index.html")
 	
+	/*
+	e.GET("/", func(c echo.Context) error{
+		//return c.String(http.StatusOK, "Root route!")
 
-	e.GET("/cats", GetCats)
-	e.GET("/jsoncats/:data", GetCatsPath)
-	e.POST("/cats", AddCat)
+	})
+	*/
+
+	e.GET("/api/cats", GetCats)
+	e.GET("/api/jsoncats/:data", GetCatsPath)
+	e.POST("/api/cats", AddCat)
 
 	e.Logger.Fatal(e.Start(":8000"))
 }
 
-// http://localhost:8000/cats?name=Cali&type=cute
+// http://localhost:8000/api/cats?name=Cali&type=cute
 func GetCats(c echo.Context) error {
 	catName := c.QueryParam("name")
 	catType := c.QueryParam("type")
@@ -32,7 +37,7 @@ func GetCats(c echo.Context) error {
 
 }
 
-// http://localhost:8000/cats/json?name=arnold&type=fluffy
+// http://localhost:8000/api/cats/json?name=arnold&type=fluffy
 // data path variable accepts value as json/string
 func GetCatsPath(c echo.Context) error {
 	catName := c.QueryParam("name")
